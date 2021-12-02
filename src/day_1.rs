@@ -3,8 +3,8 @@ pub mod sol{
     
     use std::fs;
 
-    pub fn aoc(part: u8) -> u64 {
-        let input_path = format!("./input/day{}.txt", 1);
+    pub fn aoc(day: u8, part: u8) -> u64 {
+        let input_path = format!("./input/day{}.txt", day);
         match (fs::read_to_string(&input_path), part){
             (Ok(content), 1) => {
                 part1(content)
