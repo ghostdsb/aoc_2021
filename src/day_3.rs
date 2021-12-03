@@ -79,7 +79,7 @@ pub mod sol{
             self.status = status
         }
 
-        fn zero_bit(&self, bit_index: usize) -> bool {
+        fn is_zero_bit(&self, bit_index: usize) -> bool {
             self.to_string().as_bytes()[bit_index] == b'0'
         }
 
@@ -109,7 +109,7 @@ pub mod sol{
             let mut bit_counts = (0,0);
 
             for report in reports.iter(){
-                match (report.status, report.zero_bit(bit)){
+                match (report.status, report.is_zero_bit(bit)){
                     (true, true) => bit_counts.0 += 1,
                     (true, false) => bit_counts.1 += 1,
                     _ => {}
