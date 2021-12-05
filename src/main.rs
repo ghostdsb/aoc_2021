@@ -9,10 +9,10 @@ fn main() {
 
     let ans1 = day_1::sol::aoc(1, 1);
     let ans2 = day_1::sol::aoc(1, 2);
-    
+
     let ans3 = day_2::sol::aoc(2, 1);
     let ans4 = day_2::sol::aoc(2, 2);
-    
+
     let ans5 = day_3::sol::aoc(3, 1);
     let ans6 = day_3::sol::aoc(3, 2);
 
