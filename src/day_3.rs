@@ -38,7 +38,6 @@ pub mod sol {
         }
         let gc = bin_to_decimal(&gamma);
         let ec = bin_invert_decimal(&gamma);
-        println!("{:?}, \n {}, {}", gamma, gc, ec);
         gc * ec
     }
 
@@ -81,9 +80,6 @@ pub mod sol {
     fn part2(content: &String) -> u64 {
         let ogr = get_report(content, &Rating::Oxygen);
         let csr = get_report(content, &Rating::CO2);
-
-        println!("ogr {:?}", ogr);
-        println!("csr {:?}", csr);
 
         bin_to_decimal(&ogr) * bin_to_decimal(&csr)
     }

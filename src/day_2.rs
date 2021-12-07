@@ -76,7 +76,6 @@ pub mod sol {
             };
             s
         });
-        println!("{:?}", sub);
         sub.hp * sub.depth
     }
 
@@ -95,7 +94,6 @@ pub mod sol {
             };
             s
         });
-        println!("{:?}", sub);
         sub.hp * sub.depth
     }
 }
