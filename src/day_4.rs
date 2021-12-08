@@ -106,14 +106,14 @@ pub mod sol {
     }
 
     impl Game {
-        fn new(content: &Vec<&str>) -> Self {
+        fn new(content: &[&str]) -> Self {
             let inputs = content[0]
                 .split(',')
                 .map(|d| d.parse::<u8>().unwrap())
                 .collect();
             let mut boards: Vec<Board> = vec![];
-            for i in 1..content.len() {
-                let board = Board::new(content[i]);
+            for board_data in content.iter().skip(1) {
+                let board = Board::new(board_data);
                 boards.push(board);
             }
             Self { inputs, boards }

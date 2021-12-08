@@ -15,7 +15,7 @@ pub mod sol {
         }
     }
 
-    fn part1(content: &String) -> u64 {
+    fn part1(content: &str) -> u64 {
         let report = content.split('\n').collect::<Vec<&str>>();
 
         let report_bit_length = report[0].len();
@@ -55,7 +55,7 @@ pub mod sol {
     impl<'a> Report<'a> {
         fn new(data: &'a str) -> Self {
             Self {
-                data: data,
+                data,
                 status: true,
             }
         }
@@ -64,7 +64,7 @@ pub mod sol {
             self.data.len()
         }
 
-        fn to_string(&self) -> String {
+        fn stringify(&self) -> String {
             String::from(self.data)
         }
 
@@ -73,18 +73,18 @@ pub mod sol {
         }
 
         fn is_zero_bit(&self, bit_index: usize) -> bool {
-            self.to_string().as_bytes()[bit_index] == b'0'
+            self.stringify().as_bytes()[bit_index] == b'0'
         }
     }
 
-    fn part2(content: &String) -> u64 {
+    fn part2(content: &str) -> u64 {
         let ogr = get_report(content, &Rating::Oxygen);
         let csr = get_report(content, &Rating::CO2);
 
         bin_to_decimal(&ogr) * bin_to_decimal(&csr)
     }
 
-    fn get_report(content: &String, rating: &Rating) -> Vec<u8> {
+    fn get_report(content: &str, rating: &Rating) -> Vec<u8> {
         let mut reports = content
             .split('\n')
             .map(|c| Report::new(c))
@@ -112,14 +112,14 @@ pub mod sol {
             };
 
             for report in reports.iter_mut() {
-                if report.to_string().as_bytes()[bit] - b'0' != expected_bit_count {
+                if report.stringify().as_bytes()[bit] - b'0' != expected_bit_count {
                     report.update_status(false);
                 }
             }
 
             let mut active_count = 0;
             for report in reports.iter_mut() {
-                if report.status == true {
+                if report.status {
                     active_count += 1;
                 }
             }
@@ -130,9 +130,9 @@ pub mod sol {
         }
 
         for report in reports.iter() {
-            if report.status == true {
+            if report.status {
                 return report
-                    .to_string()
+                    .stringify()
                     .as_bytes()
                     .iter()
                     .fold(vec![], |mut bts, c| {
@@ -144,17 +144,17 @@ pub mod sol {
         return vec![];
     }
 
-    fn bin_invert_decimal(bins: &Vec<u8>) -> u64 {
+    fn bin_invert_decimal(bins: &[u8]) -> u64 {
         let l = bins.len();
         bins.iter().enumerate().fold(0, |dec, (i, dig)| {
-            dec + flip_bit(*dig) as u64 * (2 as i32).pow((l - i - 1) as u32) as u64
+            dec + flip_bit(*dig) as u64 * (2_i32).pow((l - i - 1) as u32) as u64
         })
     }
 
-    fn bin_to_decimal(bins: &Vec<u8>) -> u64 {
+    fn bin_to_decimal(bins: &[u8]) -> u64 {
         let l = bins.len();
         bins.iter().enumerate().fold(0, |dec, (i, dig)| {
-            dec + *dig as u64 * (2 as i32).pow((l - i - 1) as u32) as u64
+            dec + *dig as u64 * (2_i32).pow((l - i - 1) as u32) as u64
         })
     }
 
