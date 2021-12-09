@@ -54,10 +54,7 @@ pub mod sol {
 
     impl<'a> Report<'a> {
         fn new(data: &'a str) -> Self {
-            Self {
-                data,
-                status: true,
-            }
+            Self { data, status: true }
         }
 
         fn len(&self) -> usize {

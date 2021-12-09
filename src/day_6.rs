@@ -68,7 +68,7 @@ pub mod sol {
             let mut new_fishes = vec![];
 
             for fish in school.lantern_fishes.iter_mut() {
-                if let Some(f) = fish.tick(){
+                if let Some(f) = fish.tick() {
                     new_fishes.push(f)
                 }
             }
