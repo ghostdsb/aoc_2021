@@ -82,40 +82,38 @@ pub mod sol {
 
             }
         }
+        let mut basins = vec![];
         for dip in dips.iter(){
             let s = flood_fill(&mut height_map, dip.0, dip.1, 0);
-            println!("{:?}->{}", dip, s);
+            basins.push(s);
         }
-        println!("{:?}", dips);
-        0
+        basins.sort();
+        let len = basins.len();
+        basins[len-1] * basins[len-2] * basins[len-3]
     }
 
     fn flood_fill(terrain: &mut Vec<Vec<(u64, bool)>>, x: usize, y:usize, count: u64) -> u64 {
-        if terrain[x][y].1 || terrain[x][y].0 == 9 {
-            return count - 1
+        if terrain[x][y].1 {
+            return count
         }
         let mut area = 1; 
         terrain[x][y].1 = true;
         let (t,r,b,l) = get_neighbours_coordinates(terrain, x, y);
         if let Some((tx,ty)) = t {
-            let a = flood_fill(terrain, tx, ty, count+1);
+            let a = flood_fill(terrain, tx, ty, count);
             area += a;
-            println!("{},{} -> {},{} -> {}",x,y, tx,ty, a);
         };
         if let Some((rx,ry)) = r {
-            let a = flood_fill(terrain, rx, ry, count+1);
+            let a = flood_fill(terrain, rx, ry, count);
             area += a;
-            println!("{},{} -> {},{} -> {}",x,y, rx,ry, a);
         };
         if let Some((bx,by)) = b {
-            let a = flood_fill(terrain, bx, by, count+1);
+            let a = flood_fill(terrain, bx, by, count);
             area += a;
-            println!("{},{} -> {},{} -> {}",x,y, bx,by, a);
         };
         if let Some((lx,ly)) = l {
-            let a = flood_fill(terrain, lx, ly, count+1);
+            let a = flood_fill(terrain, lx, ly, count);
             area += a;
-            println!("{},{} -> {},{} -> {}",x,y, lx,ly, a);
         };
         area
     }
@@ -150,25 +148,25 @@ pub mod sol {
     }
 
     fn get_neighbours_coordinates(terrain: &[Vec<(u64, bool)>], x: usize, y: usize) -> (Option<(usize, usize)>,Option<(usize, usize)>,Option<(usize, usize)>,Option<(usize, usize)>) {
-        let left = if y > 0 {
+        let left = if y > 0 && terrain[x][y-1].0 != 9 {
             Some((x, y-1))
         }else{
             None
         };
 
-        let right = if y < terrain[0].len()-1 {
+        let right = if y < terrain[0].len()-1 && terrain[x][y+1].0 != 9 {
             Some((x, y+1))
         }else{
             None
         };
 
-        let top = if x > 0 {
+        let top = if x > 0 && terrain[x-1][y].0 != 9 {
             Some((x-1, y))
         }else{
             None
         };
 
-        let bottom = if x < terrain.len()-1 {
+        let bottom = if x < terrain.len()-1 && terrain[x+1][y].0 != 9{
             Some((x+1, y))
         }else{
             None
