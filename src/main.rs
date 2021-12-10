@@ -1,4 +1,5 @@
 mod day_1;
+mod day_10;
 mod day_2;
 mod day_3;
 mod day_4;
@@ -7,7 +8,6 @@ mod day_6;
 mod day_7;
 mod day_8;
 mod day_9;
-mod day_10;
 
 fn main() {
     println!("Hello, AOC!");
@@ -38,7 +38,7 @@ fn main() {
 
     let ans17 = day_9::sol::aoc(9, 1);
     let ans18 = day_9::sol::aoc(9, 2);
-    
+
     let ans19 = day_10::sol::aoc(10, 1);
     let ans20 = day_10::sol::aoc(10, 2);
 

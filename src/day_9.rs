@@ -30,21 +30,20 @@ pub mod sol {
         });
         let mut danger = 0;
 
-        for i in 0..height_map.len(){
-            for j in 0..height_map[0].len(){
-
-                match get_neighbours_values(&height_map, i, j){
+        for i in 0..height_map.len() {
+            for j in 0..height_map[0].len() {
+                match get_neighbours_values(&height_map, i, j) {
                     (t, r, b, l) => {
-                        if height_map[i][j].0 < t &&
-                        height_map[i][j].0 < r &&
-                        height_map[i][j].0 < b &&
-                        height_map[i][j].0 < l{
-                            danger += height_map[i][j].0 +1;
+                        if height_map[i][j].0 < t
+                            && height_map[i][j].0 < r
+                            && height_map[i][j].0 < b
+                            && height_map[i][j].0 < l
+                        {
+                            danger += height_map[i][j].0 + 1;
                         }
-                    },
-                    _ => unreachable!()
+                    }
+                    _ => unreachable!(),
                 };
-
             }
         }
         danger
@@ -65,113 +64,116 @@ pub mod sol {
         });
         let mut dips = vec![];
 
-        for i in 0..height_map.len(){
-            for j in 0..height_map[0].len(){
-
-                match get_neighbours_values(&height_map, i, j){
+        for i in 0..height_map.len() {
+            for j in 0..height_map[0].len() {
+                match get_neighbours_values(&height_map, i, j) {
                     (t, r, b, l) => {
-                        if height_map[i][j].0 < t &&
-                        height_map[i][j].0 < r &&
-                        height_map[i][j].0 < b &&
-                        height_map[i][j].0 < l{
-                            dips.push((i,j))
+                        if height_map[i][j].0 < t
+                            && height_map[i][j].0 < r
+                            && height_map[i][j].0 < b
+                            && height_map[i][j].0 < l
+                        {
+                            dips.push((i, j))
                         }
-                    },
-                    _ => unreachable!()
+                    }
+                    _ => unreachable!(),
                 };
-
             }
         }
         let mut basins = vec![];
-        for dip in dips.iter(){
+        for dip in dips.iter() {
             let s = flood_fill(&mut height_map, dip.0, dip.1, 0);
             basins.push(s);
         }
         basins.sort();
         let len = basins.len();
-        basins[len-1] * basins[len-2] * basins[len-3]
+        basins[len - 1] * basins[len - 2] * basins[len - 3]
     }
 
-    fn flood_fill(terrain: &mut Vec<Vec<(u64, bool)>>, x: usize, y:usize, count: u64) -> u64 {
+    fn flood_fill(terrain: &mut Vec<Vec<(u64, bool)>>, x: usize, y: usize, count: u64) -> u64 {
         if terrain[x][y].1 {
-            return count
+            return count;
         }
-        let mut area = 1; 
+        let mut area = 1;
         terrain[x][y].1 = true;
-        let (t,r,b,l) = get_neighbours_coordinates(terrain, x, y);
-        if let Some((tx,ty)) = t {
+        let (t, r, b, l) = get_neighbours_coordinates(terrain, x, y);
+        if let Some((tx, ty)) = t {
             let a = flood_fill(terrain, tx, ty, count);
             area += a;
         };
-        if let Some((rx,ry)) = r {
+        if let Some((rx, ry)) = r {
             let a = flood_fill(terrain, rx, ry, count);
             area += a;
         };
-        if let Some((bx,by)) = b {
+        if let Some((bx, by)) = b {
             let a = flood_fill(terrain, bx, by, count);
             area += a;
         };
-        if let Some((lx,ly)) = l {
+        if let Some((lx, ly)) = l {
             let a = flood_fill(terrain, lx, ly, count);
             area += a;
         };
         area
     }
 
-    fn get_neighbours_values(terrain: &[Vec<(u64, bool)>], x: usize, y: usize) -> (u64,u64,u64,u64) {
-        
-        let left = if y > 0 {
-            terrain[x][y-1].0
-        }else{
+    fn get_neighbours_values(
+        terrain: &[Vec<(u64, bool)>],
+        x: usize,
+        y: usize,
+    ) -> (u64, u64, u64, u64) {
+        let left = if y > 0 { terrain[x][y - 1].0 } else { 9 };
+
+        let right = if y < terrain[0].len() - 1 {
+            terrain[x][y + 1].0
+        } else {
             9
         };
 
-        let right = if y < terrain[0].len()-1 {
-            terrain[x][y+1].0
-        }else{
+        let top = if x > 0 { terrain[x - 1][y].0 } else { 9 };
+
+        let bottom = if x < terrain.len() - 1 {
+            terrain[x + 1][y].0
+        } else {
             9
         };
 
-        let top = if x > 0 {
-            terrain[x-1][y].0
-        }else{
-            9
-        };
-
-        let bottom = if x < terrain.len()-1 {
-            terrain[x+1][y].0
-        }else{
-            9
-        };
-        
         (top, right, bottom, left)
     }
 
-    fn get_neighbours_coordinates(terrain: &[Vec<(u64, bool)>], x: usize, y: usize) -> (Option<(usize, usize)>,Option<(usize, usize)>,Option<(usize, usize)>,Option<(usize, usize)>) {
-        let left = if y > 0 && terrain[x][y-1].0 != 9 {
-            Some((x, y-1))
-        }else{
+    fn get_neighbours_coordinates(
+        terrain: &[Vec<(u64, bool)>],
+        x: usize,
+        y: usize,
+    ) -> (
+        Option<(usize, usize)>,
+        Option<(usize, usize)>,
+        Option<(usize, usize)>,
+        Option<(usize, usize)>,
+    ) {
+        let left = if y > 0 && terrain[x][y - 1].0 != 9 {
+            Some((x, y - 1))
+        } else {
             None
         };
 
-        let right = if y < terrain[0].len()-1 && terrain[x][y+1].0 != 9 {
-            Some((x, y+1))
-        }else{
+        let right = if y < terrain[0].len() - 1 && terrain[x][y + 1].0 != 9 {
+            Some((x, y + 1))
+        } else {
             None
         };
 
-        let top = if x > 0 && terrain[x-1][y].0 != 9 {
-            Some((x-1, y))
-        }else{
+        let top = if x > 0 && terrain[x - 1][y].0 != 9 {
+            Some((x - 1, y))
+        } else {
             None
         };
 
-        let bottom = if x < terrain.len()-1 && terrain[x+1][y].0 != 9{
-            Some((x+1, y))
-        }else{
+        let bottom = if x < terrain.len() - 1 && terrain[x + 1][y].0 != 9 {
+            Some((x + 1, y))
+        } else {
             None
         };
-        
+
         (top, right, bottom, left)
     }
 }
