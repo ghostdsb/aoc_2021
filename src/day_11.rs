@@ -29,6 +29,7 @@ pub mod sol {
         fn energize(&mut self){
             if self.energy < 9 {
                 self.energy += 1;
+                self.flashed = false;
             }else{
                 self.energy = 0;
                 self.flashed = true;
@@ -73,20 +74,21 @@ pub mod sol {
             glow_coordinates
         }
 
-        fn glow(&mut self, glow_coordinates: Vec<(usize, usize)>) -> u64{
-            // let mut glow_count = 0;
-            // for i in 0..self.grid.len(){
-            //     for j in 0..self.grid[0].len(){
-            //         if self.grid[i][j].0 == 0 {
-            //             glow_count += 1;
-            //         }
-            //     }
-            // }
-            // glow_count
-            for (i,j) in glow_coordinates {
-
+        fn glow(&mut self, glow_coordinate: (usize, usize)) {
+            let neighbours = get_neighbours_coordinates(&self.grid, glow_coordinate.0, glow_coordinate.1);
+            for neighbour in neighbours{
+                match neighbour {
+                    Some((x,y)) => {
+                        if self.grid[x][y].energy != 0{
+                            self.grid[x][y].energize();
+                            if self.grid[x][y].energy == 0{
+                                self.glow((x,y));
+                            }
+                        }
+                    },
+                    None => {},
+                }
             } 
-            0
         }
 
         fn flash_counts(&self) -> u64 {
@@ -104,32 +106,38 @@ pub mod sol {
 
     fn part1(content: String) -> u64 {
         let mut energy_grid = OctopusGrid::new(content);
-        println!("{:?}", energy_grid);
-        energy_grid.tick();
-        println!("{:?}", energy_grid);
-        energy_grid.tick();
-        println!("{:?}", energy_grid);
-        0
+        let mut count = 0;
+        for _ in 0..100{
+            let glow_coords = energy_grid.tick();
+            for glow_coord in glow_coords{
+                energy_grid.glow(glow_coord);
+            }
+            count += energy_grid.flash_counts();
+        }
+        count
     }
 
     fn part2(content: String) -> u64 {
-        0
+        let mut energy_grid = OctopusGrid::new(content);
+        let mut flash_index = 0;
+        for i in 0..{
+            let glow_coords = energy_grid.tick();
+            for glow_coord in glow_coords{
+                energy_grid.glow(glow_coord);
+            }
+            if energy_grid.flash_counts() == 100 {
+                flash_index = i;
+                break
+            }
+        }
+        flash_index + 1
     }
 
     fn get_neighbours_coordinates(
-        grid: &[Vec<(u64, bool)>],
+        grid: &[Vec<Octopus>],
         x: usize,
         y: usize,
-    ) -> (
-        Option<(usize, usize)>,
-        Option<(usize, usize)>,
-        Option<(usize, usize)>,
-        Option<(usize, usize)>,
-        Option<(usize, usize)>,
-        Option<(usize, usize)>,
-        Option<(usize, usize)>,
-        Option<(usize, usize)>,
-    ) {
+    ) -> Vec<Option<(usize, usize)>>{
         let left = if y > 0 {
             Some((x, y - 1))
         } else {
@@ -179,6 +187,6 @@ pub mod sol {
             None
         };
 
-        (top, top_right, right, bottom_right, bottom, bottom_left, left, top_left)
+        vec!(top, top_right, right, bottom_right, bottom, bottom_left, left, top_left).iter().filter(|coord| coord.is_some()).cloned().collect()
     }
 }
