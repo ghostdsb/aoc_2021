@@ -2,6 +2,7 @@ mod day_1;
 mod day_10;
 mod day_11;
 mod day_12c;
+mod day_13;
 mod day_2;
 mod day_3;
 mod day_4;
@@ -50,6 +51,9 @@ fn main() {
     let ans23 = day_12c::sol::aoc(12, 1);
     let ans24 = day_12c::sol::aoc(12, 2);
 
+    let ans25 = day_13::sol::aoc(13, 1);
+    let ans26 = day_13::sol::aoc(13, 2);
+
     println!();
     println!("day1: part1: {}", ans1);
     println!("day1: part2: {}", ans2);
@@ -75,4 +79,6 @@ fn main() {
     println!("day11: part2: {}", ans22);
     println!("day12: part1: {}", ans23);
     println!("day12: part2: {}", ans24);
+    println!("day13: part1: {}", ans25);
+    println!("day13: part2: {}", ans26);
 }
