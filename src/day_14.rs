@@ -35,30 +35,36 @@ pub mod sol {
     //    println!("{:?}", polymer_map);
        println!("{:?}", chains);
 
-       for i in 0..10{
-           for chain in chains.iter(){
-                let strand = chain[0];
-                let pol_data = polymer_map.get(strand);
-                if let Some((gen,count)) = pol_data{
-                    if *gen == i {
-                        if *count == 1{
-                            polymer_map.remove(strand);
-                        }else{
-                            polymer_map.insert(strand.to_string(), (*gen, *count-1));
-                        }
-                    }
-                };
-                println!("{:?}", polymer_map);
-           }
-       }
+    //    for i in 0..10{
+    //        for chain in chains.iter(){
+    //             let strand = chain[0];
+    //             let pol_data = polymer_map.get_mut(strand);
+    //             if let Some((gen,count)) = pol_data{
+    //                 if *gen == i {
+    //                     if *count == 1{
+    //                         polymer_map.remove(strand);
+    //                     }else{
+    //                         polymer_map.insert(strand.to_string(), (*gen, *count-1));
+    //                         let new_entries = get_new_polymers(strand, chain[1]);
+    //                         polymer_map.insert(strand.to_string(), (*gen, *count-1));
+    //                     }
+    //                 }
+    //             };
+    //             println!("{:?}", polymer_map);
+    //        }
+    //    }
 
        polymer_map.capacity() as u64
     }
 
-    // fn get_new_polymers(stand: &str, element: char) -> &str{
-        
-    //     ""
-    // }
+    fn get_new_polymers(check_polymer: &str, element: &str) -> [String;2]{
+        let chars = check_polymer.chars().collect::<Vec<_>>();
+        let mut str_a = String::from(chars[0]);
+        let mut str_b = String::from(element);
+        str_a.push_str(element);
+        str_b.push_str(&String::from(chars[1])[..]);
+        [str_a, str_b]
+    }
 
     fn part2(content: String) -> u64 {
         0
